@@ -1,16 +1,31 @@
 #include "mbed.h"
 #include "PinDetect.h"
 #include "DebounceIn.h"
+#include <iostream>
+
+using namespace std;
 
 // Booker and Nelson 
-// with extra credit oscilliscope pin dedication
 
-PwmOut probe(p21);
+//Setting up Pwm outputs for RGB Led
 
+PwmOut redLED(p21);
+PwmOut greenLED(p22);
+PwmOut blueLED(p23);
+
+
+
+//Setting up pin detection for PWMs on 2 pbs
 PinDetect pb(p8);
 PinDetect pb2(p7); //Debounced the pushbuttons so it would account for mechanical failure
 
-PwmOut led(LED1); //setup PWM output
+				   //Setting up inputs for RGB Led
+DigitalIn redPB(p9);
+DigitalIn greenPB(p10);
+DigitalIn bluePB(p11);
+
+//setup PWM output
+
 float p = 0.0f;
 
 void pb_hit_callback(void) {
@@ -28,28 +43,35 @@ int main() {
 	// Use internal pullups for pushbutton
 	pb.mode(PullUp);
 	pb2.mode(PullUp);
+	redPB.mode(PullUp);
+	greenPB.mode(PullUp);
+	bluePB.mode(PullUp);
+
+	// = redPB;
+	//greenLED = greenPB;
+	//blueLED = bluePB;
 	//Delay for initial pullup to take effect
 	wait(0.01);
 	// Setting up the callback functions
 	pb.attach_deasserted(&pb_hit_callback);
 	pb2.attach_deasserted(&pb2_hit_callback);
-	led = p;
+	//led = p;
 	while (1) {
+
+
+
 		if (p == 0.0f) { //brighten
 
 			if (!pb2 == 1) {
 				p += 0.1f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
-
 			}
 
 
 			else {
 				p = 0.0f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 
@@ -59,15 +81,13 @@ int main() {
 
 			if (!pb == 1) {
 				p -= 0.1f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 
 			else {
 				p = 1.0f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 		}
@@ -76,15 +96,13 @@ int main() {
 
 			if (!pb2 == 1) {
 				p += 0.1f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 
 			else if (!pb == 1) {
 				p -= 0.1f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 
@@ -95,8 +113,7 @@ int main() {
 
 			if (!pb2 == 1) {
 				p += 0.1f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 
@@ -107,8 +124,7 @@ int main() {
 
 			if (!pb == 1) {
 				p -= 0.1f;
-				led = p;
-				probe = led;
+				redLED = p; greenLED = p; blueLED = p;
 				wait(0.1);
 			}
 		}
